@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2012 Oracle and/or its affiliates.
+ * Copyright (c) 2008, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
  * This file is available and licensed under the following license:
@@ -31,6 +31,13 @@
  */
 package ensemble.search;
 
+import ensemble.generated.Samples;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+import javafx.application.ConditionalFeature;
+import javafx.application.Platform;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -44,16 +51,12 @@ import org.apache.lucene.search.grouping.SearchGroup;
 import org.apache.lucene.search.grouping.SecondPassGroupingCollector;
 import org.apache.lucene.search.grouping.TopGroups;
 import org.apache.lucene.util.Version;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
 
 /**
  * Class for searching the index
  */
 public class IndexSearcher {
-    private final static List<SearchGroup> searchGroups = new ArrayList<SearchGroup>();
+    private final static List<SearchGroup> searchGroups = new ArrayList<>();
     static {
         for (DocumentType dt: DocumentType.values()){
             SearchGroup searchGroup = new SearchGroup();
@@ -73,32 +76,53 @@ public class IndexSearcher {
             e.printStackTrace();
         }
         analyzer = new StandardAnalyzer(Version.LUCENE_31);
-        parser = new MultiFieldQueryParser(Version.LUCENE_31, new String[]{"name","description"}, analyzer);
+        parser = new MultiFieldQueryParser(Version.LUCENE_31, new String[]{"name","bookTitle","chapter","description"}, analyzer);
     }
 
     public Map<DocumentType, List<SearchResult>> search(String searchString) throws ParseException {
-        Map<DocumentType, List<SearchResult>> resultMap = new TreeMap<DocumentType, List<SearchResult>>();
+        Map<DocumentType, List<SearchResult>> resultMap = new EnumMap<>(DocumentType.class);
         try {
             Query query = parser.parse(searchString);
             final SecondPassGroupingCollector collector = new SecondPassGroupingCollector("documentType", searchGroups,
-                    Sort.RELEVANCE, null, 5, true, false, true);
+                    Sort.RELEVANCE, Sort.RELEVANCE, 10, true, false, true); 
             searcher.search(query, collector);
             final TopGroups groups = collector.getTopGroups(0);
             for (GroupDocs groupDocs : groups.groups) {
                 DocumentType docType = DocumentType.valueOf(groupDocs.groupValue);
-                List<SearchResult> results = new ArrayList<SearchResult>();
+                List<SearchResult> results = new ArrayList<>();
                 for (ScoreDoc scoreDoc : groupDocs.scoreDocs) {
-                    Document doc = searcher.doc(scoreDoc.doc);
-                    SearchResult result = new SearchResult(
-                            docType,
-                            doc.get("name"),
-                            doc.get("url"),
-                            doc.get("className"),
-                            doc.get("package"),
-                            doc.get("ensemblePath"),
-                            doc.get("shortDescription")
-                    );
-                    results.add(result);
+                    if ((Platform.isSupported(ConditionalFeature.WEB)) || (docType != DocumentType.DOC)) {
+                        Document doc = searcher.doc(scoreDoc.doc);
+                        SearchResult result = new SearchResult(
+                                docType,
+                                doc.get("name"),
+                                doc.get("url"),
+                                doc.get("className"),
+                                doc.get("package"),
+                                doc.get("ensemblePath"),
+                                docType == DocumentType.DOC
+                                        ? doc.get("bookTitle") == null ? doc.get("chapter") : doc.get("bookTitle")
+                                        : doc.get("shortDescription").trim()
+                        );
+                        /* If the result is a sample, then filter out the samples that
+                        * the runtime platform does not support. We really want to show
+                        * just 5 results, but we search for 10 and filter out unsupported
+                        * samples and show just 5.
+                        */
+                        if (docType == DocumentType.SAMPLE) {
+                            if (Samples.ROOT.sampleForPath(result.getEnsemblePath().substring(9).trim()) == null) {
+                                
+                                // Skip unsupported (not existing) samples
+                                continue;
+                            }
+                            if (results.size() == 5) {
+                                
+                                // 5 samples is enough
+                                break;
+                            }
+                        }
+                        results.add(result);
+                    } 
                 }
                 resultMap.put(docType, results);
             }
@@ -110,6 +134,8 @@ public class IndexSearcher {
 
     /**
      * Simple command line test application
+     * @param args command line arguments
+     * @throws Exception for maps errors
      */
     public static void main(String[] args) throws Exception {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
@@ -123,7 +149,9 @@ public class IndexSearcher {
             Map<DocumentType, List<SearchResult>> results = indexSearcher.search(line);
             for (Map.Entry<DocumentType, List<SearchResult>> entry : results.entrySet()) {
                 System.out.println("--------- "+entry.getKey()+" ["+entry.getValue().size()+"] --------------------------------");
-                for(SearchResult result: entry.getValue()) System.out.println(result.toString());
+                for(SearchResult result: entry.getValue()) {
+                    System.out.println(result.toString());
+                }
             }
         }
     }

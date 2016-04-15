@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2012 Oracle and/or its affiliates.
+ * Copyright (c) 2008, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
  * This file is available and licensed under the following license:
@@ -31,9 +31,6 @@
  */
 package ensemble.search;
 
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.IndexInput;
-import org.apache.lucene.store.IndexOutput;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +39,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.IndexInput;
+import org.apache.lucene.store.IndexOutput;
 
 /**
  * A very simple implementation of lucene Directory, it reads a index from the classpath in a directory called index
@@ -51,14 +51,14 @@ import java.util.Map;
  */
 public class ClasspathDirectory extends Directory {
     private String[] allFiles;
-    private final Map<String,Long> fileLengthMap = new HashMap<String, Long>();
+    private final Map<String,Long> fileLengthMap = new HashMap<>();
 
     public ClasspathDirectory() {
         // load list of all files
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("index/listAll.txt")));
             String line;
-            List<String> fileNames = new ArrayList<String>();
+            List<String> fileNames = new ArrayList<>();
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(":");
                 fileNames.add(parts[0]);
@@ -129,7 +129,7 @@ public class ClasspathDirectory extends Directory {
     @Override public void close() throws IOException {}
     @Override public boolean fileExists(String s) throws IOException { throw new UnsupportedOperationException("Not implemented"); }
     @Override public long fileModified(String s) throws IOException { throw new UnsupportedOperationException("Not implemented"); }
-    @Override public void touchFile(String s) throws IOException { throw new UnsupportedOperationException("Not implemented"); }
+    @Override @Deprecated public void touchFile(String s) throws IOException { throw new UnsupportedOperationException("Not implemented"); }
     @Override public void deleteFile(String s) throws IOException { throw new UnsupportedOperationException("Not implemented"); }
     @Override public long fileLength(String s) throws IOException { throw new UnsupportedOperationException("Not implemented"); }
     @Override public IndexOutput createOutput(String s) throws IOException { throw new UnsupportedOperationException("Not implemented"); }

@@ -28,10 +28,10 @@
 						'package private protected public return ' +
 						'short static strictfp super switch synchronized this throw throws true ' +
 						'transient try void volatile while';
-
-		this.regexList = [
+                                            
+                this.regexList = [
 			{ regex: SyntaxHighlighter.regexLib.singleLineCComments,	css: 'comments' },		// one line comments
-			{ regex: /\/\*([^\*][\s\S]*)?\*\//gm,						css: 'comments' },	 	// multiline comments
+                        { regex: SyntaxHighlighter.regexLib.multiLineCComments, css: 'comments' },      // multiline comments
 			{ regex: /\/\*(?!\*\/)\*[\s\S]*?\*\//gm,					css: 'preprocessor' },	// documentation comments
 			{ regex: SyntaxHighlighter.regexLib.doubleQuotedString,		css: 'string' },		// strings
 			{ regex: SyntaxHighlighter.regexLib.singleQuotedString,		css: 'string' },		// strings
@@ -39,7 +39,7 @@
 			{ regex: /(?!\@interface\b)\@[\$\w]+\b/g,					css: 'color1' },		// annotation @anno
 			{ regex: /\@interface\b/g,									css: 'color2' },		// @interface keyword
 			{ regex: new RegExp(this.getKeywords(keywords), 'gm'),		css: 'keyword' }		// java keyword
-			];
+                ];
 
 		this.forHtmlScript({
 			left	: /(&lt;|<)%[@!=]?/g, 

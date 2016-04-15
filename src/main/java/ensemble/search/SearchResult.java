@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2012 Oracle and/or its affiliates.
+ * Copyright (c) 2008, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
  * This file is available and licensed under the following license:
@@ -82,6 +82,20 @@ public class SearchResult {
     }
 
     @Override public String toString() {
+//        return "SearchResult{" +
+//                "\n     documentType=" + documentType +
+//                "\n     name='" + name + '\'' +
+//                "\n     url='" + url + '\'' +
+//                "\n     className='" + className + '\'' +
+//                "\n     packageName='" + packageName + '\'' +
+//                "\n     ensemblePath='" + ensemblePath + '\'' +
+//                "\n     shortDescription='" + shortDescription + '\'' +
+//                "\n}";
+        return documentType +"::"+name+
+                "\n" + shortDescription;
+    }
+    
+    public String debugToString() {
         return "SearchResult{" +
                 "\n     documentType=" + documentType +
                 "\n     name='" + name + '\'' +

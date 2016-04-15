@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2012 Oracle and/or its affiliates.
+ * Copyright (c) 2008, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
  * This file is available and licensed under the following license:
@@ -34,29 +34,11 @@ package ensemble.util;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.FileChannel;
-import java.util.Locale;
 
 /**
  * Misc Utilities
  */
 public class Utils {
-
-    private static final String os = System.getProperty("os.name").toLowerCase(new Locale(""));
-
-    /**
-     * Returns true if the operating system is a form of Windows.
-     */
-    public static boolean isWindows(){
-        return os.indexOf("win") >= 0;
-    }
-
-    /**
-     * Returns true if the operating system is a form of Mac OS.
-     */
-    public static boolean isMac(){
-        return os.indexOf("mac") >= 0;
-    }
 
     /**
      * Load a text file into a String
@@ -80,11 +62,12 @@ public class Utils {
      * @return file contents as a string
      */
     public static String loadFile(URL url) {
+        if (url == null) return "File is not available";
         StringBuilder sb = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String line;
-            while((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 sb.append(line);
                 sb.append('\n');
             }

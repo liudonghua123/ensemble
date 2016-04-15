@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2012 Oracle and/or its affiliates.
+ * Copyright (c) 2008, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
  * This file is available and licensed under the following license:
@@ -97,7 +97,18 @@ public enum DocumentType {
      *      className       : non fully qualified
      *      package         : qualified package
      */
-    ENUM("Enums");
+    ENUM("Enums"),
+    /**
+     * Single enum value of a Java Class,
+     * fields:
+     *      documentType    : Type of document, one of this enum's values
+     *      bookTitle       : document title
+     *      chapter         : document chapter
+     *      name            : document section
+     *      description     : textual content (Not Stored)
+     *      ensemblePath     : fully qualified oracle.com url
+     */
+    DOC("Documentation");
 
     private final String pluralDisplayName;
 

@@ -13,7 +13,6 @@
         <resources>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
             </resource>
             <resource>
                 <directory>${project.basedir}/src/main/java</directory>
@@ -27,14 +26,10 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
-<!--
-To add JavaFX to the classpath, first run:
-sudo mvn com.zenjava:javafx-maven-plugin:2.0:fix-classpath
--->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -47,7 +42,7 @@ sudo mvn com.zenjava:javafx-maven-plugin:2.0:fix-classpath
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>ensemble.Ensemble2</mainClass>
+                    <mainClass>ensemble.EnsembleApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>
