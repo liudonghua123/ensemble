@@ -45,6 +45,20 @@
                     <mainClass>ensemble.EnsembleApp</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.excelsiorjet</groupId>
+                <artifactId>excelsior-jet-maven-plugin</artifactId>
+                <version>0.5.1</version>
+                <configuration>
+                    <mainClass>ensemble.EnsembleApp</mainClass>
+                    <hideConsole>true</hideConsole>
+                    <outputName>Ensemble8</outputName>
+                    <packaging>native-bundle</packaging>
+                    <optRtFiles>
+                        <optRtFile>javafx-webkit</optRtFile>
+                    </optRtFiles>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
