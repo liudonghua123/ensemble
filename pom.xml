@@ -52,11 +52,16 @@
                 <configuration>
                     <mainClass>ensemble.EnsembleApp</mainClass>
                     <hideConsole>true</hideConsole>
+                    <product>Ensemble8</product>
                     <outputName>Ensemble8</outputName>
                     <packaging>native-bundle</packaging>
                     <optRtFiles>
                         <optRtFile>javafx-webkit</optRtFile>
                     </optRtFiles>
+                    <osxBundleConfiguration>
+                        <identifier>ru.excelsior.Ensemble8</identifier>
+                        <appStorePublishing>true</appStorePublishing>
+                    </osxBundleConfiguration>
                 </configuration>
             </plugin>
         </plugins>
