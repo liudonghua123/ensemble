@@ -1,0 +1,6 @@
+Ensemble is a gallery of sample applications that demonstrate a large variety of JavaFX features.
+It is included in the official Oracle JDK Demos and Samples downloads, which are open sourced 
+under the BSD license (see LICENSE).
+
+This package contains Ensemble compiled into a native OS X binary with Excelsior JET (www.excelsiorjet.com).
+Its sole purpose is demonstrating the capability to publish natively compiled Java applications in the Mac App Store.

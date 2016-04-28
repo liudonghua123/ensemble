@@ -61,6 +61,9 @@
                     <osxBundleConfiguration>
                         <identifier>ru.excelsior.Ensemble8</identifier>
                         <appStorePublishing>true</appStorePublishing>
+                        <entitlements>
+                            <param>com.apple.security.network.client</param>
+                        </entitlements>
                     </osxBundleConfiguration>
                 </configuration>
             </plugin>
